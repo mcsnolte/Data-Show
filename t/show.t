@@ -31,13 +31,13 @@ my @expected = <DATA>;
 my @got      = split "(?<=\n)", $STDERR;
 
 for my $n (0..$#expected) {
-    is $got[$n], $expected[$n];
+    is $got[$n], $expected[$n] => ": $expected[$n]";
 }
 
 __DATA__
 ======(  %foo  )=============================[ 'show.t', line 12 ]======
 
-    { foo => 1, food => 2, fool => 3, foon => [5, 6, 7, 8, 9, 10], foop => 4 }
+    { foo => 1, food => 2, fool => 3, foon => [5 .. 10], foop => 4 }
 
 
 ======(  $/  )===============================[ 'show.t', line 13 ]======

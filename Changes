@@ -7,3 +7,11 @@ Revision history for Data-Show
 
 0.001001  Tue Jun 22 06:14:58 2010
           No changes logged
+
+
+0.001002  Sun Oct 10 19:04:25 2010
+
+    - Patched distribution to track changes in Data::Dump 1.17
+      (thanks Christopher)
+
+    - Improved recognition of hashes and arrays at the end of a block

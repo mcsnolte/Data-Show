@@ -9,6 +9,7 @@ my $builder = Module::Build->new(
     dist_version_from   => 'lib/Data/Show.pm',
     requires => {
         'Test::More' => 0,
+        'Data::Dump' => 1.17,
         'version'    => 0,
     },
     add_to_cleanup      => [ 'Data-Show-*' ],

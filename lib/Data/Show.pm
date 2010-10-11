@@ -5,7 +5,7 @@ use strict;
 use Data::Dump 'dump';
 use 5.010;
 
-our $VERSION = '0.001001';
+our $VERSION = '0.001002';
 
 # Unconditionally export show()...
 sub import {
@@ -97,7 +97,7 @@ sub show {
     $desc //= $context;
 
     # Isolate arg list and compress internal whitespace...
-    $desc =~ s{ \A .*? \b show \b \s* ($CODE) (?: [;\}] .* | \Z ) }{$1}xms;
+    $desc =~ s{ \A .*? \b show \b \s* ($CODE) \s* (?: [;\}] .* | \Z ) }{$1}xms;
     $desc =~ s{\s+}{ }gxms;
 
     # Serialize Contextual::Return::Value objects (which break dump())...
@@ -111,9 +111,9 @@ sub show {
     # Serialize argument (restoring it, if it was inappropriately flattened)...
     my $representation;
     given ($desc) {
-        when (m{ \A \@ $IDENT \Z }xms) { $representation = dump \@_; }
-        when (m{ \A \% $IDENT \Z }xms) { $representation = dump {@_};}
-        default                        { $representation = dump @_;  }
+        when (m{ \A \@ $IDENT \s* \Z }xms) { $representation = dump \@_; }
+        when (m{ \A \% $IDENT \s* \Z }xms) { $representation = dump {@_};}
+        default                            { $representation = dump @_;  }
     }
 
     # Indent representation wrt heading...
@@ -150,7 +150,7 @@ Data::Show - Dump data structures with name and point-of-origin
 
 =head1 VERSION
 
-This document describes Data::Show version 0.001001
+This document describes Data::Show version 0.001002
 
 
 =head1 SYNOPSIS
