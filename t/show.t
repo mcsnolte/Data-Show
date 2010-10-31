@@ -26,6 +26,7 @@ show $foo{q[;{{{]};
 do {
     show 'foo' ~~ m/;{\/{/
 };
+show $/{Answer};
 
 my @expected = <DATA>;
 my @got      = split "(?<=\n)", $STDERR;
@@ -93,3 +94,8 @@ __DATA__
 ======(  'foo' ~~ m/;{\/{/  )================[ 'show.t', line 27 ]======
 
     ""
+
+
+======(  $/{Answer}  )=======================[ 'show.t', line 29 ]======
+
+    undef

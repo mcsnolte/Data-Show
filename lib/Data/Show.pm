@@ -5,7 +5,7 @@ use strict;
 use Data::Dump 'dump';
 use 5.010;
 
-our $VERSION = '0.001002';
+our $VERSION = '0.001_003';
 
 # Unconditionally export show()...
 sub import {
@@ -20,22 +20,23 @@ my $IDENT = qr{
     [^\W\d]\w* (?: :: [^\W\d]\w* )* | [_\W]
 }xms;
 
+use re 'eval';
 my $CODE = qr{
         (?&CODE_FRAGMENT)
 
         (?(DEFINE)
             (?<CODE_FRAGMENT>
                 (?: (?&QUOTED)
-                  | (?: q[qxr]?+ | [msy] | tr ) \s* <DELIMITED>
+                  | \b (?: q[qxr]?+ | [msy] | tr ) \s* (?&DELIMITED) 
                   | (?&NESTED)
-                  | [%\$\@] (?: (?&BRACE_DELIMS) | $IDENT )
+                  | [%\$\@] (?: (?&BRACE_DELIMS) | $IDENT) (?&NESTED)?
                   | [^][{}()"'`;]
                 )++
             )
 
             (?<NESTED_CODE_FRAGMENT>
                 (?: (?&QUOTED)
-                  | (?: q[qxr]?+ | [msy] | tr ) \s* (?&DELIMITED)
+                  | \b (?: q[qxr]?+ | [msy] | tr ) \s* (?&DELIMITED)
                   | (?&NESTED)
                   | [^][{}()"'`]
                 )++
@@ -55,7 +56,7 @@ my $CODE = qr{
                 | (?&ANGLE_DELIMS)
                 | (?&SQUARE_DELIMS)
                 | \s++ (?<DELIM_W>\w) (?:\\.|(?!\g{DELIM_W}).)*+ \g{DELIM_W}
-                |      (?<DELIM_S>\S) (?:\\.|(?!\g{DELIM_S}).)*+ \g{DELIM_S}
+                |      (?<DELIM_S>[^\w\s]) (?:\\.|(?!\g{DELIM_S}).)*+ \g{DELIM_S}
             )
 
             (?<NESTED>
@@ -97,7 +98,7 @@ sub show {
     $desc //= $context;
 
     # Isolate arg list and compress internal whitespace...
-    $desc =~ s{ \A .*? \b show \b \s* ($CODE) \s* (?: [;\}] .* | \Z ) }{$1}xms;
+    $desc =~ s{ \A (?: (?!\bshow) . )*? \b show \b \s* ($CODE) \s* (?: [;\}] .* | \Z ) }{$1}xms;
     $desc =~ s{\s+}{ }gxms;
 
     # Serialize Contextual::Return::Value objects (which break dump())...
@@ -150,7 +151,7 @@ Data::Show - Dump data structures with name and point-of-origin
 
 =head1 VERSION
 
-This document describes Data::Show version 0.001002
+This document describes Data::Show version 0.001_003
 
 
 =head1 SYNOPSIS
@@ -326,3 +327,4 @@ RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
 FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
 SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGES.
+
