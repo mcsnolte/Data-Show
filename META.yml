@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Data-Show
-version:             0.001_003
+version:             0.001_004
 abstract:            Dump data structures with name and point-of-origin
 license:             ~
 author:              

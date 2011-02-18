@@ -5,7 +5,7 @@ use strict;
 use Data::Dump 'dump';
 use 5.010;
 
-our $VERSION = '0.001_003';
+our $VERSION = '0.001_004';
 
 # Unconditionally export show()...
 sub import {
@@ -151,7 +151,7 @@ Data::Show - Dump data structures with name and point-of-origin
 
 =head1 VERSION
 
-This document describes Data::Show version 0.001_003
+This document describes Data::Show version 0.001_004
 
 
 =head1 SYNOPSIS

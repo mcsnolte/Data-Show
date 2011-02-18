@@ -20,3 +20,9 @@ Revision history for Data-Show
 0.001_003  Sun Oct 31 07:36:19 2010
 
     - Improved recognition of q/qq/qr/etc.
+
+
+0.001_004  Sat Feb 19 08:13:46 2011
+
+    - Fixed test suite to work correctly with long doubles
+      (thanks Andreas!)
