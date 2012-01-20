@@ -5,7 +5,7 @@ use strict;
 use Data::Dump 'dump';
 use 5.010;
 
-our $VERSION = '0.001_004';
+our $VERSION = '0.002001';
 
 # Unconditionally export show()...
 sub import {
@@ -27,7 +27,7 @@ my $CODE = qr{
         (?(DEFINE)
             (?<CODE_FRAGMENT>
                 (?: (?&QUOTED)
-                  | \b (?: q[qxr]?+ | [msy] | tr ) \s* (?&DELIMITED) 
+                  | \b (?: q[qxr]?+ | [msy] | tr ) \s* (?&DELIMITED)
                   | (?&NESTED)
                   | [%\$\@] (?: (?&BRACE_DELIMS) | $IDENT) (?&NESTED)?
                   | [^][{}()"'`;]
@@ -112,9 +112,9 @@ sub show {
     # Serialize argument (restoring it, if it was inappropriately flattened)...
     my $representation;
     given ($desc) {
-        when (m{ \A \@ $IDENT \s* \Z }xms) { $representation = dump \@_; }
-        when (m{ \A \% $IDENT \s* \Z }xms) { $representation = dump {@_};}
-        default                            { $representation = dump @_;  }
+        when (m{ \A \@ $IDENT \s* \Z }xms)                 { $representation = dump \@_; }
+        when (m{ \A \(? \s* \% $IDENT \s* \)? \s* \Z }xms) { $representation = dump {@_};}
+        default                                            { $representation = dump @_;  }
     }
 
     # Indent representation wrt heading...
@@ -151,7 +151,7 @@ Data::Show - Dump data structures with name and point-of-origin
 
 =head1 VERSION
 
-This document describes Data::Show version 0.001_004
+This document describes Data::Show version 0.002001
 
 
 =head1 SYNOPSIS

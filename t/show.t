@@ -10,7 +10,7 @@ my $baz = 'baz';
 my $ref = \@bar;
 sub sq;
 
-show %foo;
+show(%foo);
 show $/;
 show @bar;
 show (

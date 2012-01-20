@@ -26,3 +26,9 @@ Revision history for Data-Show
 
     - Fixed test suite to work correctly with long doubles
       (thanks Andreas!)
+
+
+0.002001  Fri Jan 20 17:45:43 2012
+
+    - Fixed annoying flattening of show(%hash) construct
+      (thanks Salvatore!)
