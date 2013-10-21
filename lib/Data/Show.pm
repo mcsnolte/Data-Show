@@ -5,7 +5,7 @@ use strict;
 use Data::Dump 'dump';
 use 5.010;
 
-our $VERSION = '0.002001';
+our $VERSION = '0.002002';
 
 # Unconditionally export show()...
 sub import {
@@ -79,6 +79,9 @@ my $DEFAULT_INDENT = 4;
 my $MAX_WIDTH      = 72;
 my $TITLE_POS      = 6;
 
+# Be a ninja...
+our @CARP_NOT;
+
 # The whole point of the module...
 sub show {
 
@@ -93,12 +96,13 @@ sub show {
     }
 
     # Trim filename and format context info and description...
-    $file =~ s{.*/}{}xms;
+    $file =~ s{.*[/\\]}{}xms;
     my $context = "'$file', line $line";
     $desc //= $context;
 
     # Isolate arg list and compress internal whitespace...
     $desc =~ s{ \A (?: (?!\bshow) . )*? \b show \b \s* ($CODE) \s* (?: [;\}] .* | \Z ) }{$1}xms;
+    $desc =~ s{\A \( | \) \Z}{}gxms;
     $desc =~ s{\s+}{ }gxms;
 
     # Serialize Contextual::Return::Value objects (which break dump())...
@@ -110,12 +114,9 @@ sub show {
     }
 
     # Serialize argument (restoring it, if it was inappropriately flattened)...
-    my $representation;
-    given ($desc) {
-        when (m{ \A \@ $IDENT \s* \Z }xms)                 { $representation = dump \@_; }
-        when (m{ \A \(? \s* \% $IDENT \s* \)? \s* \Z }xms) { $representation = dump {@_};}
-        default                                            { $representation = dump @_;  }
-    }
+    my $representation = $desc =~ m{ \A \@ $IDENT \s* \Z }xms ? dump(\@_ )
+                       : $desc =~ m{ \A \% $IDENT \s* \Z }xms ? dump({@_})
+                       :                                        dump( @_ );
 
     # Indent representation wrt heading...
     $representation =~ s{^}{ q{ } x $DEFAULT_INDENT }gxmse;
@@ -151,7 +152,7 @@ Data::Show - Dump data structures with name and point-of-origin
 
 =head1 VERSION
 
-This document describes Data::Show version 0.002001
+This document describes Data::Show version 0.002002
 
 
 =head1 SYNOPSIS

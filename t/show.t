@@ -1,8 +1,8 @@
-#! /usr/bin/perl -w
-use 5.010;
-
-use Data::Show; use Test::More 'no_plan';
-my $STDERR; close STDERR; open *STDERR, '>', \$STDERR or die $!;
+use Data::Show;
+use Test::More 'no_plan';
+my $STDERR;
+close STDERR;
+open *STDERR, '>', \$STDERR or die $!;
 
 my %foo = (foo => 1, food => 2, fool => 3, foop => 4, foon => [5..10]);
 my @bar = qw<b a r>;
@@ -33,7 +33,12 @@ my @expected = <DATA>;
 my @got      = split "(?<=\n)", $STDERR;
 
 for my $n (0..$#expected) {
-    is $got[$n], $expected[$n] => ": $expected[$n]";
+    if ($expected[$n] =~ m{\A \s* \{ }xms) {
+        is_deeply(eval($got[$n]), eval($expected[$n]) => ": $expected[$n]");
+    }
+    else {
+        is $got[$n], $expected[$n] => ": $expected[$n]";
+    }
 }
 
 sub sq {

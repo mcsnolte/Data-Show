@@ -32,3 +32,10 @@ Revision history for Data-Show
 
     - Fixed annoying flattening of show(%hash) construct
       (thanks Salvatore!)
+
+
+0.002002  Tue Oct 22 10:20:04 2013
+
+    - Refixed annoying flattening
+
+    - Fixed problems with 5.18 (thanks John)
