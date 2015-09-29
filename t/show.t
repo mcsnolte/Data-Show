@@ -29,6 +29,10 @@ do {
 };
 show $/{Answer};
 
+my $str = 'foo';
+$str =~ m/(?<bar>\w+)/;
+show $+{bar};
+
 my @expected = <DATA>;
 my @got      = split "(?<=\n)", $STDERR;
 
@@ -110,3 +114,8 @@ __DATA__
 ======(  $/{Answer}  )=======================[ 'show.t', line 30 ]======
 
     undef
+
+
+======(  $+{bar}  )==========================[ 'show.t', line 34 ]======
+
+    "foo"
