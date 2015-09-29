@@ -89,21 +89,26 @@ sub show {
     my (undef, $file, $line) = caller();
 
     # Extract description of arglist from context...
-    my $desc;
+    my ( $desc, $context );
     if (open my $fh, '<', $file) {
         for (1..$line-1) { readline($fh) // last }
         $desc = do { local $/; readline $fh; };
     }
 
-    # Trim filename and format context info and description...
-    $file =~ s{.*[/\\]}{}xms;
-    my $context = "'$file', line $line";
-    $desc //= $context;
+    {
+        # local-ize %+ to avoid clobbering any values with regexes below...
+        local %+;
 
-    # Isolate arg list and compress internal whitespace...
-    $desc =~ s{ \A (?: (?!\bshow) . )*? \b show \b \s* ($CODE) \s* (?: [;\}] .* | \Z ) }{$1}xms;
-    $desc =~ s{\A \( | \) \Z}{}gxms;
-    $desc =~ s{\s+}{ }gxms;
+        # Trim filename and format context info and description...
+        $file =~ s{.*[/\\]}{}xms;
+        $context = "'$file', line $line";
+        $desc //= $context;
+
+        # Isolate arg list and compress internal whitespace...
+        $desc =~ s{ \A (?: (?!\bshow) . )*? \b show \b \s* ($CODE) \s* (?: [;\}] .* | \Z ) }{$1}xms;
+        $desc =~ s{\A \( | \) \Z}{}gxms;
+        $desc =~ s{\s+}{ }gxms;
+    }
 
     # Serialize Contextual::Return::Value objects (which break dump())...
     for my $arg (@_) {
